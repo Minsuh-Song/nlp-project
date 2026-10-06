@@ -44,9 +44,9 @@ def training_step(model, batch):
 
     주의: batch 안의 텐서는 이미 올바른 device 에 올라와 있습니다.
     """
-    raise NotImplementedError(
-        "train.py 의 training_step 을 구현하세요. "
-        "docstring 에 세 단계가 순서대로 적혀 있습니다.")
+    labels = batch.pop("labels")
+    out = model(**batch)
+    return F.cross_entropy(out.logits, labels)
 
 
 # ================================================================ 학습 루프 (그대로 두셔도 됩니다)

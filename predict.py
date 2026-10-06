@@ -39,9 +39,22 @@ def predict_loop(model, loader, device):
     주의: 함수 위에 @torch.no_grad() 가 이미 붙어 있습니다. 그래서 따로
     no_grad 로 감싸지 않으셔도 됩니다. 이걸 빼면 5만 건에서 메모리가 터집니다.
     """
-    raise NotImplementedError(
-        "predict.py 의 predict_loop 을 구현하세요. "
-        "docstring 에 세 단계가 적혀 있습니다.")
+    model.eval()
+    all_pred, all_prob = [], []
+
+    for batch in loader:
+        batch.pop("labels", None)                           # 정답은 예측에 필요 없으니 제거
+        batch = {k: v.to(device) for k, v in batch.items()} # 나머지를 GPU로 이동
+
+        logits = model(**batch).logits                      # (배치크기, 2) 점수
+        p = torch.softmax(logits, dim=-1)                   # 확률로 변환
+
+        all_pred.append(p.argmax(-1).cpu())                 # 예측 라벨 (0 또는 1)
+        all_prob.append(p.cpu())                            # 확률
+
+    pred = torch.cat(all_pred).numpy()
+    prob = torch.cat(all_prob).numpy()
+    return pred, prob
 
 
 # ================================================================ CLI (그대로 두셔도 됩니다)

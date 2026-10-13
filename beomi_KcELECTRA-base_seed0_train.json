@@ -1,0 +1,13 @@
+{
+  "losses": [
+    0.29306868841012823,
+    0.17954425588774736
+  ],
+  "train_minutes": 13.751357277234396,
+  "model": "beomi/KcELECTRA-base",
+  "seed": 0,
+  "lr": 2e-05,
+  "bs": 32,
+  "epochs": 2,
+  "max_len": 64
+}
